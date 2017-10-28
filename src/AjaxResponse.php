@@ -14,22 +14,38 @@ class AjaxResponse
      * @var \Domatskiy\AjaxResponse
      */
 
-
-    function __construct($callback)
+    function __construct($callback, $use_old_api)
     {
+        
         try{
 
-            /**
-             * @var \Bitrix\Main\Context\HttpRequest
-             */
-            $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+            $request = null;
 
-            if(!$request->isAjaxRequest())
+            if($use_old_api)
             {
-                \CHTTP::SetStatus('500');
-                echo 'Not correct request';
-                die();
+
+                if($_REQUEST['ajax']!=='Y')
+                {
+                    \CHTTP::SetStatus('500');
+                    echo 'Not correct request';
+                    die();
+                }
+                else
+                {
+                    /**
+                     * @var \Bitrix\Main\Context\HttpRequest
+                     */
+                    $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+
+                    if(!$request->isAjaxRequest())
+                    {
+                        \CHTTP::SetStatus('500');
+                        echo 'Not correct request';
+                        die();
+                    }
+                }
             }
+
 
             if($callback instanceof \Closure)
             {
@@ -63,13 +79,20 @@ class AjaxResponse
 
         if($result->isSuccess())
         {
-            echo \Bitrix\Main\Web\Json::encode($result->getData());
+            if($use_old_api)
+                json_encode($result->getData());
+            else
+                echo \Bitrix\Main\Web\Json::encode($result->getData());
         }
         else
         {
             //header('version: 1.2', false);
             \CHTTP::SetStatus($result->getResponseCode());
-            echo \Bitrix\Main\Web\Json::encode($result->getErrors());
+
+            if($use_old_api)
+                json_encode($result->getErrors());
+            else
+                echo \Bitrix\Main\Web\Json::encode($result->getErrors());
         }
 
         die();
@@ -79,7 +102,5 @@ class AjaxResponse
     {
 
     }
-
-
 
 }

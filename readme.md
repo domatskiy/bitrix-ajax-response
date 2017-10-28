@@ -5,10 +5,24 @@
 ```
 composer require domatskiy/bitrix-ajax-response
 ```
-## use
+## use Closure
 
 ```php
+    new AjaxResponse(function(){});
+```
 
+## use method of class
+```php
+    new AjaxResponse('class@method');
+```
+
+## use old bitrix api
+```php
+    new AjaxResponse('class@method', true);
+```
+
+## Example
+```php
 define("STOP_STATISTICS", true);
 define('NO_AGENT_CHECK', true);
 define("STATISTIC_SKIP_ACTIVITY_CHECK", true);
