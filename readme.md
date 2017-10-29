@@ -1,78 +1,56 @@
 # bitrix-ajax-response
 
-## install 
+## Установка
 
 ```
 composer require domatskiy/bitrix-ajax-response
 ```
-## use Closure
+## использование Closure
 
 ```php
-    new AjaxResponse(function(){});
+    new AjaxResponse(function(){
+        
+        ... 
+        
+        });
 ```
 
-## use method of class
+## использование метода класса
 ```php
     new AjaxResponse('class@method');
 ```
 
-## use old bitrix api
+## Использование старого bitrix api
+Важно: в запросе нужно передавать поле 'ajax' со значением 'Y'
+
 ```php
     new AjaxResponse('class@method', true);
 ```
 
-## Example
+## Пример
 ```php
 define("STOP_STATISTICS", true);
 define('NO_AGENT_CHECK', true);
 define("STATISTIC_SKIP_ACTIVITY_CHECK", true);
-
+ 
 use Domatskiy\AjaxResponse;
-
+ 
 # подключаем bitrix
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
-
+ 
 if(class_exists('\Domatskiy\AjaxResponse')){
-
+ 
     new AjaxResponse(function(){
-    
+     
         $result = new AjaxResponse\Result();
         $data = array();
-        
+         
         # body
-        
+         
         $result->setData($data);
         return $result;
-        
+         
         });
-   
-    }
-```
-
-or use function 
-
-```php
-new AjaxResponse('func');
-```
-
-or use class method 
-
-```php
-new AjaxResponse('myClass@func');
-```
-
-in func
-
-```php
-func(){
- 
-    $result = new AjaxResponse\Result();
-    $data = array();
-    
-    # body
-    
-    $result->setData($data);
-    return $result;
     
     }
 ```
